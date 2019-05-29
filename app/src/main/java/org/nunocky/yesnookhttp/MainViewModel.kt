@@ -14,6 +14,8 @@ class MainViewModel : ViewModel() {
     val forced: LiveData<String> = mutableForced
     val bitmap: LiveData<ByteArray?> = mutableBitmapByteArray
 
+    var view: MainContract.View? = null
+
     private val compositeDisposable = CompositeDisposable()
 
     private val yesNoRepository = YesNoRepository()
@@ -24,6 +26,8 @@ class MainViewModel : ViewModel() {
     }
 
     private fun clearInfo() {
+        view?.startJudge()
+
         mutableAnswer.value = "wait a moment..."
         mutableForced.value = ""
         mutableBitmapByteArray.value = null
@@ -52,9 +56,11 @@ class MainViewModel : ViewModel() {
                     mutableAnswer.value = yesNo.answer
                     mutableForced.value = if (yesNo.forced) "(ﾟ∀ﾟ)" else "(-_-)"
                     mutableBitmapByteArray.value = bitmapByteArray
+                    view?.endJudge()
                 },
                 { t ->
                     t.printStackTrace()
+                    view?.endJudge()
                 })
 
         compositeDisposable.add(d)
