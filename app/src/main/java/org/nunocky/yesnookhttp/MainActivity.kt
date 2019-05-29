@@ -9,8 +9,7 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_main.*
 import org.nunocky.yesnookhttp.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
-
+class MainActivity : AppCompatActivity(), MainContract.View {
     lateinit var binding: ActivityMainBinding
     lateinit var viewModel: MainViewModel
 
@@ -34,4 +33,23 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.view = this
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.view = null
+    }
+
+    override fun startJudge() {
+        button.isEnabled = false
+    }
+
+    override fun endJudge() {
+        button.isEnabled = true
+    }
+
 }
